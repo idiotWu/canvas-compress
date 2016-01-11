@@ -79,7 +79,15 @@ class Defer {
 }
 
 /* export */ class CanvasCompress {
-    constructor({ type = DEFAULT_TYPE, size = DEFAULT_SIZE, quality = DEFAULT_QUALITY } = {}) {
+    constructor({ type = DEFAULT_TYPE, width = DEFAULT_SIZE.width, height = DEFAULT_SIZE.height, quality = DEFAULT_QUALITY } = {}) {
+
+        quality = parseFloat(quality);
+
+        const size = {
+            width: parseFloat(width),
+            height: parseFloat(height)
+        };
+
         Object.defineProperties(this, {
             outputType: {
                 get() {
