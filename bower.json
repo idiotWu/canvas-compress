@@ -1,0 +1,27 @@
+{
+  "name": "canvas-compress",
+  "description": "image compress with canvas",
+  "main": "dist/canvas-compress.js",
+  "authors": [
+    "Dolphin Wood <dolphin.w.e@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "canvas",
+    "compress"
+  ],
+  "homepage": "https://github.com/idiotWu/canvas-compress",
+  "moduleType": [
+    "es6"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "exif-js": "~2.1.1"
+  }
+}
