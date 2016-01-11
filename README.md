@@ -36,7 +36,7 @@ bower install canvas-compress --save
 ## Usage
 
 ```javascript
-    import { CanvasCompress } from 'canvas-compress';
+    import CanvasCompress from 'canvas-compress';
 
     let compressor = new CanvasCompress(options);
 
