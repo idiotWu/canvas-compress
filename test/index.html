@@ -22,22 +22,22 @@
 </head>
 <body>
     <p>
-        <label for="quality">quality(%): </label>
-        <input type="range" name="quality" id="quality" min="0" max="100">
+        <label for="quality">quality: </label>
+        <input type="range" name="quality" id="quality" min="0" max="1" step="0.01">
         <span class="option-value"></span>
     </p>
     <p>
-        <label for="width">max width(px): </label>
+        <label for="width">max width: </label>
         <input type="range" name="width" id="width" min="100" max="1000">
         <span class="option-value"></span>
     </p>
     <p>
-        <label for="height">max height(px): </label>
+        <label for="height">max height: </label>
         <input type="range" name="height" id="height" min="100" max="1000">
         <span class="option-value"></span>
     </p>
     <p>
-        <input type="file" id="upload">
+        <input type="file" id="upload" accept="image/*">
     </p>
     <div class="preview">
         <figure>

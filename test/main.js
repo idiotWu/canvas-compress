@@ -3,7 +3,7 @@ var URL = window.URL || window.webkitURL;
 var lastFile = null;
 
 var options = {
-    quality: 90,
+    quality: 0.9,
     width: 1000,
     height: 618
 };
