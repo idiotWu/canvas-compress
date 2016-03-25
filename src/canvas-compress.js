@@ -10,64 +10,87 @@ const DEFAULT_SIZE = {
     height: 618
 };
 
-const ORIENTATION_MAP = {
-    1: {
-        // default
-        swap: false,
-        matrix: [1, 0,
-                 0, 1,
-                 0, 0]
-    },
-    2: {
-        // horizontal flip
-        swap: false,
-        matrix: [-1, 0,
-                 0, 1,
-                 'width', 0]
-    },
-    3: {
-        // 180° rotated
-        swap: false,
-        matrix: [-1, 0,
-                 0, -1,
-                 'width', 'height']
-    },
-    4: {
-        // vertical flip
-        swap: false,
-        matrix: [1, 0,
-                 0, -1,
-                 0, 'height']
-    },
-    5: {
-        // vertical flip + -90° rotated
-        swap: true,
-        matrix: [0, 1,
-                 1, 0,
-                 0, 0]
-    },
-    6: {
-        // -90° rotated
-        swap: true,
-        matrix: [0, 1,
-                 -1, 0,
-                 'height', 0]
-    },
-    7: {
-        // horizontal flip + -90° rotate
-        swap: true,
-        matrix: [0, -1,
-                 -1, 0,
-                 'height', 'width']
-    },
-    8: {
-        // 90° rotated
-        swap: true,
-        matrix: [0, -1,
-                 1, 0,
-                 0, 'width']
+function getTransform(image, orientation) {
+    const { width, height } = image;
+
+    switch (orientation) {
+        case 1:
+            // default
+            return {
+                width, height,
+                matrix: [1, 0,
+                         0, 1,
+                         0, 0]
+            };
+
+        case 2:
+            // horizontal flip
+            return {
+                width, height,
+                matrix: [-1, 0,
+                         0, 1,
+                         width, 0]
+            };
+
+        case 3:
+            // 180° rotated
+            return {
+                width, height,
+                matrix: [-1, 0,
+                         0, -1,
+                         width, height]
+            };
+
+        case 4:
+            // vertical flip
+            return {
+                width, height,
+                matrix: [1, 0,
+                         0, -1,
+                         0, height]
+            };
+
+        case 5:
+            // vertical flip + -90° rotated
+            return {
+                width: height,
+                height: width,
+                matrix: [0, 1,
+                         1, 0,
+                         0, 0]
+            };
+
+        case 6:
+            // -90° rotated
+            return {
+                width: height,
+                height: width,
+                matrix: [0, 1,
+                         -1, 0,
+                         height, 0]
+             };
+
+        case 7:
+            // horizontal flip + -90° rotate
+            return {
+                width: height,
+                height: width,
+                matrix: [0, -1,
+                         -1, 0,
+                         height, width]
+            };
+
+        case 8:
+            // 90° rotated
+            return {
+                width: height,
+                height: width,
+                matrix: [0, -1,
+                         1, 0,
+                         0, width]
+             };
     }
-};
+}
 
 class Defer {
     constructor() {
@@ -132,24 +155,10 @@ class Defer {
         const context = canvas.getContext('2d');
         const deferred = new Defer();
 
-        let { width, height } = image;
-
         EXIF.getData(image, () => {
             const orientation = EXIF.getTag(image, 'Orientation') || 1;
-            const { swap, matrix } = ORIENTATION_MAP[orientation];
 
-            if (swap) {
-                width = image.height;
-                height = image.width;
-            }
-
-            if (typeof matrix[4] === 'string') {
-                matrix[4] = image[matrix[4]];
-            }
-
-            if (typeof matrix[5] === 'string') {
-                matrix[5] = image[matrix[5]];
-            }
+            const { width, height, matrix } = getTransform(image, orientation);
 
             canvas.width = width;
             canvas.height = height;
