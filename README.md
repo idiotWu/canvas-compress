@@ -59,6 +59,11 @@ There're four optional properties for options object:
 
 - `quality<number>`: output quality, defalut is `0.9`
 
+## Use third-party Promise
+
+```javascript
+    CanvasCompress.usePromise(require('bluebird'));
+```
 
 ## License
 
