@@ -210,7 +210,7 @@ class Defer {
 
         const scale = Math.min(1, outputSize.width / width, outputSize.height / height);
 
-        return Promise.resolve({ source, scale });
+        return GLOBAL_ENV.Promise.resolve({ source, scale });
     }
 
     // resolved with result canvas
@@ -238,7 +238,7 @@ class Defer {
         canvas.height = height;
         context.drawImage(source, 0, 0, width, height, 0, 0, width, height);
 
-        return Promise.resolve(canvas);
+        return GLOBAL_ENV.Promise.resolve(canvas);
     }
 
     // resolved with compressed image blob
@@ -250,16 +250,16 @@ class Defer {
         const buffer = atob(dataURL.split(',')[1]).split('').map((char) => char.charCodeAt(0));
         const blob = new Blob([new Uint8Array(buffer)], { type: outputType });
 
-        return Promise.resolve({ blob, width, height });
+        return GLOBAL_ENV.Promise.resolve({ blob, width, height });
     }
 
     process(/* file blob */ file) {
         if (!file) {
-            return Promise.reject(new ReferenceError('file blob is required'));
+            return GLOBAL_ENV.Promise.reject(new ReferenceError('file blob is required'));
         }
 
         if (!file.type.match(/^image/)) {
-            return Promise.reject(new TypeError(`unsupport file type: ${file.type}`));
+            return GLOBAL_ENV.Promise.reject(new TypeError(`unsupport file type: ${file.type}`));
         }
 
         const srcDimensions = {};
