@@ -10,6 +10,26 @@ const DEFAULT_SIZE = {
     height: 618
 };
 
+const GLOBAL_ENV = {
+    _Promise: window.Promise,
+
+    get Promise() {
+        if (typeof this._Promise !== 'function') {
+            throw new Error('canvas-compress requires Promise');
+        }
+
+        return this._Promise;
+    },
+
+    set Promise(Constructor) {
+        if (typeof Constructor !== 'function') {
+            throw new TypeError('Promise should be a function');
+        }
+
+        this._Promise = Constructor;
+    }
+};
+
 function getTransform(image, orientation) {
     const { width, height } = image;
 
@@ -94,7 +114,7 @@ function getTransform(image, orientation) {
 
 class Defer {
     constructor() {
-        this.promise = new Promise((resolve, reject) => {
+        this.promise = new GLOBAL_ENV.Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
         });
@@ -102,7 +122,16 @@ class Defer {
 }
 
 /* export */ class CanvasCompress {
-    constructor({ type = DEFAULT_TYPE, width = DEFAULT_SIZE.width, height = DEFAULT_SIZE.height, quality = DEFAULT_QUALITY } = {}) {
+    static usePromise(Constructor) {
+        GLOBAL_ENV.Promise = Constructor;
+    }
+
+    constructor({
+        type = DEFAULT_TYPE,
+        width = DEFAULT_SIZE.width,
+        height = DEFAULT_SIZE.height,
+        quality = DEFAULT_QUALITY
+    } = {}) {
 
         quality = parseFloat(quality);
 
