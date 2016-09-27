@@ -38,10 +38,15 @@ bower install canvas-compress --save
 ```javascript
     import CanvasCompress from 'canvas-compress';
 
-    let compressor = new CanvasCompress(options);
+    const compressor = new CanvasCompress({
+        type: 'image/jpeg',
+        width: 1000,
+        height: 618,
+        quality: 0.9,
+    });
 
     compressor.process(fileBlob).then(({ source, result }) => {
-        const { blob, width, height } = source;
+        // const { blob, width, height } = source;
         const { blob, width, height } = result;
         ...
     });
