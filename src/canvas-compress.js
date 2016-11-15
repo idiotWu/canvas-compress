@@ -215,47 +215,60 @@ class Defer {
 
     // resolved with result canvas
     _drawImage({ source, scale }) {
-        const tempCanvas = document.createElement('canvas');
-        const tctx = tempCanvas.getContext('2d');
+        if (scale === 1) {
+            return GLOBAL_ENV.Promise.resolve(source);
+        }
 
         const sctx = source.getContext('2d');
         const steps = Math.min(MAX_SCALE_STEPS, Math.ceil((1 / scale) / SCALE_FACTOR));
 
-        scale = Math.pow(scale, 1 / steps);
+        const factor = Math.pow(scale, 1 / steps);
+
+        const mirror = document.createElement('canvas');
+        const mctx = mirror.getContext('2d');
 
         let { width, height } = source;
 
-        tempCanvas.width = width;
-        tempCanvas.height = height;
+        mirror.width = width;
+        mirror.height = height;
 
-        for (let i = 0; i < steps; i++) {
-            const dw = width * scale | 0;
-            const dh = height * scale | 0;
+        for (let i = 0; ; i++) {
+            const dw = width * factor | 0;
+            const dh = height * factor | 0;
 
-            let canvas, context;
+            let src, context;
 
             if (i % 2 === 0) {
-                canvas = source;
-                context = tctx;
+                src = source;
+                context = mctx;
             } else {
-                canvas = tempCanvas;
+                src = mirror;
                 context = sctx;
             }
 
             context.clearRect(0, 0, width, height);
-            context.drawImage(canvas, 0, 0, width, height, 0, 0, dw, dh);
+            context.drawImage(src, 0, 0, width, height, 0, 0, dw, dh);
 
             width = dw;
             height = dh;
+
+            if (i === steps) {
+                // get current working canvas
+                const canvas = src === source ? mirror : source;
+
+                // save data
+                const data = context.getImageData(0, 0, width, height);
+
+                // resize
+                canvas.width = width;
+                canvas.height = height;
+
+                // restore image data
+                context.putImageData(data, 0, 0);
+
+                return GLOBAL_ENV.Promise.resolve(canvas);
+            }
         }
-
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = width;
-        canvas.height = height;
-        context.drawImage(source, 0, 0, width, height, 0, 0, width, height);
-
-        return GLOBAL_ENV.Promise.resolve(canvas);
     }
 
     // resolved with compressed image blob
