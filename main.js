@@ -27,7 +27,7 @@ var compress = function(file) {
     sourceInfo.textContent = resultInfo.textContent = '';
 
     var compressor = new CanvasCompress(Object.assign({
-        type: CanvasCompress.MIME.JPG,
+        type: CanvasCompress.isSupportedType(file.type) ? file.type : CanvasCompress.MIME.JPEG,
     }, options));
     var startTime = Date.now();
 
