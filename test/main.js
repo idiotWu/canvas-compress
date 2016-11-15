@@ -48,7 +48,7 @@ var compress = function(file) {
             'File size: ' + (result.blob.size / 1024 ).toFixed(2) + 'KB',
             'File type: ' + result.blob.type,
             'Dimensions: ' + result.width + ' * ' + result.height,
-            'Compress Rate: ' + ((1 - result.blob.size / source.blob.size) * 100).toFixed(2) + '%',
+            'Compress rate: ' + ((result.blob.size / source.blob.size) * 100).toFixed(2) + '%',
             'Compress duration: ' + (Date.now() - startTime)+ 'ms'
         ].join('\n');
     }).catch(alert);
