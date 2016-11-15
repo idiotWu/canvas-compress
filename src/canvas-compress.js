@@ -3,8 +3,16 @@ const URL = window.URL || window.webkitURL;
 const SCALE_FACTOR = Math.log(2);
 const MAX_SCALE_STEPS = 4;
 
+const MIME_TYPES = {
+    PNG: 'image/png',
+    JPEG: 'image/jpeg',
+    WEBP: 'image/webp',
+};
+
+const SUPPORT_MIME_TYPES = Object.keys(MIME_TYPES).map(type => MIME_TYPES[type]);
+
+const DEFAULT_TYPE = MIME_TYPES.JPEG;
 const DEFAULT_QUALITY = 0.9;
-const DEFAULT_TYPE = 'image/jpeg';
 const DEFAULT_SIZE = {
     width: 1000,
     height: 618
@@ -29,6 +37,16 @@ const GLOBAL_ENV = {
         this._Promise = Constructor;
     }
 };
+
+function adjustMIME(type) {
+    if (!SUPPORT_MIME_TYPES.includes(type)) {
+        console.warn(`[canvas-compress]: unsupport MIME type ${type}, will fallback to default ${DEFAULT_TYPE}`);
+
+        return DEFAULT_TYPE;
+    }
+
+    return type;
+}
 
 function getTransform(image, orientation) {
     const { width, height } = image;
@@ -124,7 +142,16 @@ class Defer {
 /* export */ class CanvasCompress {
     static usePromise(Constructor) {
         GLOBAL_ENV.Promise = Constructor;
-    }
+    };
+
+    static isSupportedType(type) {
+        return SUPPORT_MIME_TYPES.includes(type);
+    };
+
+    static MIME = {
+        ...MIME_TYPES,
+        JPG: MIME_TYPES.JPEG,
+    };
 
     constructor({
         type = DEFAULT_TYPE,
@@ -132,6 +159,7 @@ class Defer {
         height = DEFAULT_SIZE.height,
         quality = DEFAULT_QUALITY
     } = {}) {
+        type = adjustMIME(type);
 
         quality = parseFloat(quality);
 
@@ -141,6 +169,9 @@ class Defer {
         };
 
         Object.defineProperties(this, {
+            isJPEG: {
+                value: type === MIME_TYPES.JPEG,
+            },
             outputType: {
                 get() {
                     return type;
@@ -157,6 +188,22 @@ class Defer {
                 }
             }
         });
+    }
+
+    _clear(ctx, width, height) {
+        // is canvas?
+        if (ctx.nodeType === 1) {
+            ctx = ctx.getContext('2d');
+            width = ctx.width;
+            height = ctx.height;
+        }
+
+        if (this.isJPEG) {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, width, height);
+        } else {
+            ctx.clearRect(0, 0, width, height);
+        }
     }
 
     // resolved with image element
@@ -193,6 +240,7 @@ class Defer {
             canvas.height = height;
             context.save();
             context.transform(...matrix);
+            this._clear(context, width, height);
             context.drawImage(image, 0, 0);
             context.restore();
 
@@ -232,7 +280,9 @@ class Defer {
         mirror.width = width;
         mirror.height = height;
 
-        for (let i = 0; ; i++) {
+        let i = 0;
+
+        while (i < steps) {
             const dw = width * factor | 0;
             const dh = height * factor | 0;
 
@@ -246,9 +296,10 @@ class Defer {
                 context = sctx;
             }
 
-            context.clearRect(0, 0, width, height);
+            this._clear(context, width, height);
             context.drawImage(src, 0, 0, width, height, 0, 0, dw, dh);
 
+            i++;
             width = dw;
             height = dh;
 
