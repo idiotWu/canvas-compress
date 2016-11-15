@@ -36,27 +36,27 @@ bower install canvas-compress --save
 ## Usage
 
 ```javascript
-    import CanvasCompress from 'canvas-compress';
+import CanvasCompress from 'canvas-compress';
 
-    const compressor = new CanvasCompress({
-        type: CanvasCompress.MIME.JPEG,
-        width: 1000,
-        height: 618,
-        quality: 0.9,
-    });
+const compressor = new CanvasCompress({
+    type: CanvasCompress.MIME.JPEG,
+    width: 1000,
+    height: 618,
+    quality: 0.9,
+});
 
-    compressor.process(fileBlob).then(({ source, result }) => {
-        // const { blob, width, height } = source;
-        const { blob, width, height } = result;
-        ...
-    });
+compressor.process(fileBlob).then(({ source, result }) => {
+    // const { blob, width, height } = source;
+    const { blob, width, height } = result;
+    ...
+});
 ```
 
 ## Options
 
 There're four optional properties for options object:
 
-- `type: string`: output type, default is `image/jpeg`
+- `type: string`: output type, default is `CanvasCompress.MIME.JPEG`
 
 - `width: number`: output width, default is `1000`
 
@@ -67,16 +67,16 @@ There're four optional properties for options object:
 ## Use third-party Promise
 
 ```javascript
-    CanvasCompress.usePromise(require('bluebird'));
+CanvasCompress.usePromise(require('bluebird'));
 ```
 
 ## Supported output MIME types
 
 canvas-compress uses [`canvas.toDataUrl()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL) method to convert canvas to binary. So the supported MIME types is:
 
-- 'image/png'
-- 'image/jpeg'
-- 'image/webp'
+- `'image/png'`
+- `'image/jpeg'`
+- `'image/webp'`
 
 You can get MIME type via `CanvasCompress.MIME`, or use `CanvasCompress.isSupportedType(MIMEtype: string)` to check if it's a valid MIME type.
 
