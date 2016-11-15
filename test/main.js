@@ -26,7 +26,9 @@ var compress = function(file) {
     sourceImg.src = resultImg.src = '';
     sourceInfo.textContent = resultInfo.textContent = '';
 
-    var compressor = new CanvasCompress(options);
+    var compressor = new CanvasCompress(Object.assign({
+        type: file.type,
+    }, options));
     var startTime = Date.now();
 
     compressor.process(file).then(function(res) {
