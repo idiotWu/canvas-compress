@@ -215,18 +215,35 @@ class Defer {
 
     // resolved with result canvas
     _drawImage({ source, scale }) {
+        const tempCanvas = document.createElement('canvas');
+        const tctx = tempCanvas.getContext('2d');
+
         const sctx = source.getContext('2d');
-        let steps = Math.min(MAX_SCALE_STEPS, Math.ceil((1 / scale) / SCALE_FACTOR));
+        const steps = Math.min(MAX_SCALE_STEPS, Math.ceil((1 / scale) / SCALE_FACTOR));
 
         scale = Math.pow(scale, 1 / steps);
 
         let { width, height } = source;
 
-        while(steps--) {
-            let dw = width * scale | 0;
-            let dh = height * scale | 0;
+        tempCanvas.width = width;
+        tempCanvas.height = height;
 
-            sctx.drawImage(source, 0, 0, width, height, 0, 0, dw, dh);
+        for (let i = 0; i < steps; i++) {
+            const dw = width * scale | 0;
+            const dh = height * scale | 0;
+
+            let canvas, context;
+
+            if (i % 2 === 0) {
+                canvas = source;
+                context = tctx;
+            } else {
+                canvas = tempCanvas;
+                context = sctx;
+            }
+
+            context.clearRect(0, 0, width, height);
+            context.drawImage(canvas, 0, 0, width, height, 0, 0, dw, dh);
 
             width = dw;
             height = dh;
