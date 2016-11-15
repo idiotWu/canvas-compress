@@ -38,8 +38,12 @@ const GLOBAL_ENV = {
     }
 };
 
+function isSupportedType(type) {
+    return SUPPORT_MIME_TYPES.includes(type);
+}
+
 function adjustMIME(type) {
-    if (!SUPPORT_MIME_TYPES.includes(type)) {
+    if (!isSupportedType(type)) {
         console.warn(`[canvas-compress]: unsupported MIME type ${type}, will fallback to default ${DEFAULT_TYPE}`);
 
         return DEFAULT_TYPE;
@@ -145,7 +149,7 @@ class Defer {
     };
 
     static isSupportedType(type) {
-        return SUPPORT_MIME_TYPES.includes(type);
+        return isSupportedType(type);
     };
 
     static MIME = {
