@@ -39,7 +39,7 @@ bower install canvas-compress --save
     import CanvasCompress from 'canvas-compress';
 
     const compressor = new CanvasCompress({
-        type: 'image/jpeg',
+        type: CanvasCompress.MIME.JPEG,
         width: 1000,
         height: 618,
         quality: 0.9,
@@ -56,19 +56,33 @@ bower install canvas-compress --save
 
 There're four optional properties for options object:
 
-- `type<string>`: output type, default is `image/jpeg`
+- `type: string`: output type, default is `image/jpeg`
 
-- `width<number>`: output width, default is `1000`
+- `width: number`: output width, default is `1000`
 
-- `height<number>`: ouput height, default is `618`
+- `height: number`: ouput height, default is `618`
 
-- `quality<number>`: output quality, defalut is `0.9`
+- `quality: number`: output quality, defalut is `0.9`
 
 ## Use third-party Promise
 
 ```javascript
     CanvasCompress.usePromise(require('bluebird'));
 ```
+
+## Supported output MIME types
+
+canvas-compress uses [`canvas.toDataUrl()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL) method to convert canvas to binary. So the supported MIME types is:
+
+- 'image/png'
+- 'image/jpeg'
+- 'image/webp'
+
+You can get MIME type via `CanvasCompress.MIME`, or use `CanvasCompress.isSupportedType(MIMEtype: string)` to check if it's a valid MIME type.
+
+## About alpha channel
+
+Alpha channel is not available with MIME type `image/jpeg`, so when you are trying to turn an image into jpeg, you'll get a full white background(`rgb(255, 255, 255)`) instead of transparent black(`rgba(0, 0, 0, 0)`).
 
 ## License
 
