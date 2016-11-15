@@ -191,13 +191,6 @@ class Defer {
     }
 
     _clear(ctx, width, height) {
-        // is canvas?
-        if (ctx.nodeType === 1) {
-            ctx = ctx.getContext('2d');
-            width = ctx.width;
-            height = ctx.height;
-        }
-
         if (this.isJPEG) {
             ctx.fillStyle = '#fff';
             ctx.fillRect(0, 0, width, height);
