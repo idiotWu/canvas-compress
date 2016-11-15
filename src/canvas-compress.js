@@ -40,7 +40,7 @@ const GLOBAL_ENV = {
 
 function adjustMIME(type) {
     if (!SUPPORT_MIME_TYPES.includes(type)) {
-        console.warn(`[canvas-compress]: unsupport MIME type ${type}, will fallback to default ${DEFAULT_TYPE}`);
+        console.warn(`[canvas-compress]: unsupported MIME type ${type}, will fallback to default ${DEFAULT_TYPE}`);
 
         return DEFAULT_TYPE;
     }
