@@ -72,7 +72,7 @@ CanvasCompress.usePromise(require('bluebird'));
 
 ## Supported output MIME types
 
-canvas-compress uses [`canvas.toDataUrl()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL) method to convert canvas to binary. So the supported MIME types is:
+Since canvas-compress uses [`canvas.toDataUrl()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL) method to convert canvas to binary, the following MIME types are supported:
 
 - `'image/png'`
 - `'image/jpeg'`
